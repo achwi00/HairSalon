@@ -21,10 +21,34 @@ public class HairdresserSchedule
         visits = new ArrayList<>();
     }
 
+    public void followRecurringSchedule()
+    {
+
+        RecurringSchedule sch = this.hairdresser.searchForSchedule(date.getDayOfWeek());
+        // System.out.println(sch);
+        //System.out.println(sch.getDayOfWeek());
+        if(sch == null)
+        {
+            System.out.println("impossible");
+        }
+        else{
+            fillWithVisits(sch.getShiftStart(),sch.getShiftEnd(), sch.getVisitTimeMinutes());
+        }
+    }
+
     public void addVisit(LocalTime startTime, LocalTime stopTime)
     {
         Visit visit = new Visit(getDate(),startTime, stopTime, getHairdresser());
         visits.add(visit);
+    }
+    public void fillWithVisits(LocalTime start, LocalTime stop, int minutes)
+    {
+        //start from the start time, add a new visit to the list (visits) every x minutes
+        while(!start.equals(stop))
+        {
+            addVisit(start, start.plusMinutes(minutes));
+            start = start.plusMinutes(minutes);
+        }
     }
 
     public ArrayList<Visit> searchForVisit(LocalDate date)
